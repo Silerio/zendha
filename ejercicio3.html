@@ -1,0 +1,67 @@
+<!--Estructura Básica HTML-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zendha Core - Prueba</title>
+    <!--Zendha Core Logo-->
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAgVBMVEVHcEzVOF7dMWjdMWjaOWLbMWfeMmndXE3TL2HZMGXeMmndMWnOXkvylTjTL2LhgjzxlTjaMGbdMWjCTkzwljfwlTfvkTq+Nlbwkzi9Jlq7KFLcMWfwkTnvkTq7JVnvkjnwljfwljefIECcHz6eID+cHz6dID+dID+gIEGvJUy5KFJg8Vt1AAAAK3RSTlMAGq7hDor/BVY4z/7QQf//tnbv///wjf9X/yifKmzjysDg1ED//73wc//rlur66gAAAQBJREFUeAGtkFVCBDEUBDPxcbd1t/sfkBDiOGz9jHRF+oGAKAJfEUGE4OcKJlRC8Icx44gqEGfv8zihljTL3x1OU1coyipy87oxuTLarh9MzBubIHXSWHZdPzGZE2c1iXAtX+ayE8hNFtQAF7Lt0gjd6vUAW85ppIS1FZoaOPBNKKBF0HvrC2kSjJcFAn2+AHbfCZUUps+FvBPswecCWO/73SoQAhgAjhCBT1BCcTh+I5zOl8XHwkILp+uNfXQHsNTC6XR1zhlEy/xNrBslCGNhWnaCXm0SiU3uUjjf/FFPQLFICimcbuGoDfzhHzHZIxTsdrjaYTijtuAFcztiGb8AVSEbh2TldqQAAAAASUVORK5CYII=">
+    <!--Importar Bootstrap CSS por CDN para agregar estilos de forma rápida-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <style>
+      /*Crear clase para estilo custom de contenedor principal*/
+      .main-container{
+        margin: 5% auto;
+        background: radial-gradient(circle, rgba(253,29,29,0.7018842937565651) 0%, rgba(252,176,69,1) 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <!--Generar contenedor principal apoyandonos con clases de bootstrap-->
+    <div class="container p-4">
+      <div class="row">
+        <div class="col-12 col-md-8 main-container align-self-center shadow-lg p-3 rounded">
+          <h1 class="display-4 text-center mb-4" style="color: #fff">Ejercicio 3</h1>
+          <h5 class="text-end">Candidato: Erwin Sifuentes Silerio</h5>
+          <div class="row my-4">
+            <div class="col-6">
+              <input id="x1" type="number" style="width: 50%;" placeholder="X1">
+              <input id="y1" type="number" style="width: 50%;" placeholder="Y1">
+            </div>
+            <div class="col-6">
+              <input id="x2" type="number" style="width: 50%;" placeholder="X2">
+              <input id="y2" type="number" style="width: 50%;" placeholder="Y2">
+            </div>
+            <button onClick="calculateDistance()" class="my-4">
+              Calcular distancia
+            </button>
+          </div>
+          <div class="row" id="excersice_content">
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <!--Importación de Bootstrap JS-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+  <script>
+    // Obtener elementos contenedores
+    const excersice_content_element = document.getElementById('excersice_content');
+
+    function calculateDistance(){
+      const x1 = document.getElementById('x1').value;
+      const y1 = document.getElementById('y1').value;
+
+      const x2 = document.getElementById('x2').value;
+      const y2 = document.getElementById('y2').value;
+
+      const squareX = Math.pow(Math.abs(x1 - x2), 2);
+      const squareY = Math.pow(Math.abs(y1 - y2), 2);
+
+      const hypo = Math.hypot(squareX, squareY);
+
+      excersice_content_element.innerHTML = `Distancia más corta: <b>${hypo}</b>`;
+    }
+  </script>
+</html>

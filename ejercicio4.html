@@ -1,0 +1,126 @@
+<style>
+  .flex-row {
+    display: flex;
+  }
+  
+  .flex-container > div {
+    margin: 10px;
+    text-align: center;
+    font-size: 24px;
+  }
+
+  .flex-container .headers div {
+    margin: 10px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+  }
+</style>
+<script>
+  //helperw
+  function sanitizeAmount(amount = 0){
+    let amountSanitize = amount;
+
+    amountSanitize = amountSanitize.trim();
+    amountSanitize = amountSanitize.replace("$","");
+    amountSanitize = amountSanitize.replace(",","");
+    amountSanitize = amountSanitize.replace(" ","");
+
+    return Number(amountSanitize);
+  }
+
+  function sortBillingsByDatesASC(a, b){
+    const val1 = new Date(a.fecha).getTime();
+    const val2 = new Date(b.fecha).getTime();
+
+    if(val1 == val2){ return 0; }
+    if(val1 > val2){ return +1; }
+    
+    return -1;
+  }
+
+
+  //! NOTA: El tipado en Vanilla Javascript esta muy limitado, si se utilizará Typescript ayudaría a dar robustes a las clases y en general a la app.
+  class BillingController {
+    // Se debe escribir y especificar las props aquí
+    constructor() {
+      const Http = new XMLHttpRequest();
+      const url="https://pruebas.zendha.net";
+      
+      Http.open("GET", url);
+      Http.send();
+
+      Http.onreadystatechange = (e) => {
+        this.billings = JSON.parse(Http.responseText);
+      }
+
+      // En el ejercicio no especificaba el iva por lo que agregue una variable para después ser editada para los cálculos
+      this.ivaPorcentage = 16;
+    }
+
+    // Estos métodos deben de ser privados
+    getBillings(){
+      return this.billings;
+    }
+
+    getTotalIva(){
+      let totalIva = 0;
+
+      this.billings.forEach(billing => {
+        let billingIva = sanitizeAmount(billing.importe_subtotal)*(this.ivaPorcentage*0.01);
+
+        totalIva += this.ivaPorcentage;
+      });
+
+      return this.totalIva;
+    }
+
+    getSellingsByReceptor(){
+      const receptorsArray = [];
+
+      this.billings.forEach((billing, index) => {
+        receptorsArray[billing.receptor] = (receptorsArray[billing.receptor] || 0) + sanitizeAmount(billing.importe_subtotal);
+      });
+
+      const receptorsTotals = receptorsArray.map((value, index) => {
+        if(value != null){
+          return { receptor: index, total: value };
+        }
+      }).filter(e => e);
+
+      return receptorsTotals;
+    }
+
+    getFacturationRangeDates(){
+      const billingsSortedASC = this.billings.sort(sortBillingsByDatesASC);
+
+      const billingRangeStart = billingsSortedASC[0].fecha || 'N/A';
+      const billingRangeEnd = billingsSortedASC[billingsSortedASC.length - 1].fecha || 'N/A';
+
+      return `Periodo de facturas desde ${billingRangeStart} hasta el ${billingRangeEnd}`;
+    }
+
+    getBillingTable(billings = this.billings){
+      const rows = billings.map(billing => `
+        <div class="flex-row">
+          <div style="width: 25%">${billing.numero_factura}</div>
+          <div style="width: 25%">${billing.receptor}</div>
+          <div style="width: 25%">${billing.importe_subtotal}</div>
+          <div style="width: 25%">${billing.fecha}</div>
+        </div>
+      `);
+
+      return (
+        `<div>
+          <div class="flex-row headers">
+            <div style="width: 25%">Numero de Fectura</div>
+            <div style="width: 25%">Receptor</div>
+            <div style="width: 25%">Importe Facturado</div>
+            <div style="width: 25%">Fecha</div>
+          </div>
+          ${rows.join("")}
+        </div>`
+      );
+    }    
+  }
+</script>
